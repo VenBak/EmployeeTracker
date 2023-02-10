@@ -71,7 +71,13 @@ inquirer.prompt([
 
 // function that adds queries and launches the main menu function start() again
 function addQuery (sql, parameters) {
-  db.query(sql, param)
+  db.query((sql, param), (error, success) => {
+    if (error) {
+      console.error(error)
+    }
+    start();
+    
+  })
   
   start()
 }
@@ -104,16 +110,52 @@ function updateEmployeeRole() {
 // Functions that will be used to see the selected table
 function viewTable (query) {
   // run a query based on the parameters passed in the function
-  db.query(query, (error, data) => {
-    error ? console.info(error) : 
-    console.log(cTable.getTable(data)) 
-    start()
-  })
+  const sql = query;
+    db.query(sql, (err, data) => {
+        if (err) {
+            console.error(`Unsuccessful`);
+            console.error(err);
+        } else {
+            const table = cTable.getTable(data)
+            console.log("\n" + table);
+            init();
+        }
+    });
+  }
+
+
+function addRole() {
+  // Prompts the user to ask questions about the role they wish to add
+  inquirer.prompt([
+    {
+        type: "input",
+        message: "What is the name of the role?",
+        name: "title",
+    },
+    {
+        type: "input",
+        message: "What's the salary of the role ?",
+        name: "salary",
+    },
+    {
+        type: "list",
+        message: "Which department is the role under ?",
+        choices: ['HR', 'Finance', 'Marketing', 'Operations'],
+        name: "department_id",
+    },
+]).then((data) => {
+  // Adds another query where it selects from the departments
+    db.query(`SELECT * FROM company_db.department WHERE name = "${data.department_id}";`, (err, results) => {
+        if (err) {
+            console.error(err);
+        } else {
+            var sql = `INSERT INTO company_db.role (role.title, role.salary, role.department_id) VALUES (?, ?, ?)`
+            var params = [data.title, data.salary, choice.id];
+            addQuery(sql, params);
+        }
+    })
+})
 }
-
-// function addRole() {
-
-// }
 
 // Function that will be used to add a department
 function addDepartment() {
@@ -121,7 +163,7 @@ function addDepartment() {
   inquirer.prompt([
       {
           type: "input",
-          message: "What is the name of the department you wish to add ??",
+          message: "What is the name of the department you wish to add ?",
           name: "name"
       },
   ]).then((data) => {
