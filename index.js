@@ -17,21 +17,11 @@ db.connect(
 )
 
 // Variables that hold the sql code for each of the actions im gonna use them for
-var allRoles = `SELECT role.id as "Role ID", department.name as "Department", role.salary as "Salary", role.title as "Title"
-                FROM employee_db.role JOIN employee_db.department ON employee_db.department.id = role.department_id`
+var allRoles = `SELECT role.id as "Role ID", department.name as "Department", role.salary as "Salary", role.title as "Title" FROM employee_db.role JOIN employee_db.department ON employee_db.department.id = role.department_id`
 
 var allDepartments = `SELECT id as "Department ID", name as "Department" FROM employee_db.department`
 
-var allEmployees =  `SELECT employee.id as "Employee ID",
-                      employee.first_name as "First Name",
-                      employee.last_name as "Last Name",
-                      role.title as Title,
-                      department.name as Department,
-                      role.salary as Salary,
-                      concat(manager.first_name, " ", manager.last_name) as "Manager Name" FROM employee_db.employee employee
-                      LEFT JOIN employee_db.employee manager ON employee.manager_id = manager.id
-                      LEFT JOIN employee_db.role ON employee_db.role.id = employee.role_id
-                      LEFT JOIN employee_db.department ON employee_db.department.id = role.department_id`
+var allEmployees =  `SELECT employee.id as "Employee ID", employee.first_name as "First Name", employee.last_name as "Last Name", role.title as Title, department.name as Department, role.salary as Salary, concat(manager.first_name, " ", manager.last_name) as "Manager Name" FROM employee_db.employee employee LEFT JOIN employee_db.employee manager ON employee.manager_id = manager.id LEFT JOIN employee_db.role ON employee_db.role.id = employee.role_id LEFT JOIN employee_db.department ON employee_db.department.id = role.department_id`
 
 // The start function will load the main menu, asking the user what they want to be done
 function start() {
@@ -46,7 +36,7 @@ inquirer.prompt([
 // Based on the answer the user has given, we will launch individual functions that do what is wanted
   .then(answers => {
   console.info(answers)
-  switch (answers.role) {
+  switch (answers.action) {
     case 'View All Employees':
         viewTable(allEmployees)
         break;
@@ -117,11 +107,12 @@ function viewTable (query) {
             console.error(err);
         } else {
             const table = cTable.getTable(data)
-            console.log("\n" + table);
-            init();
+            console.info("\n" + table);
+            start();
         }
     });
-  }
+}
+
 
 
 function addRole() {
