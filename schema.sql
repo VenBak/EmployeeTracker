@@ -28,12 +28,12 @@ CREATE TABLE employee (
 );
 
 
-INSERT INTO department (id, name)
-VALUES (001, "Human Resources"),
-(002, "Marketing"),
-(003, "Finance"),
-(004, "Operations"),
-(005, "Board of Executives");
+INSERT INTO department (name)
+VALUES ("Human Resources"),
+("Marketing"),
+("Finance"),
+("Operations"),
+("Board of Executives");
 
 INSERT INTO role (title, salary, department_id)
 VALUES ("Chief Executive Officer", 12980, 5),
