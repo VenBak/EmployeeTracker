@@ -32,3 +32,14 @@ VALUES (001, "Bob", "Lazar", 001),
 (003, "London", "Bertrud", 003);
 
 SELECT * FROM employee_db.employee;
+
+----
+
+USE employee_db;
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Boris", "Johnson", 2, 4),
+       ("David","Smith", 1, 3),
+       ("Dan", "Grud", 3, 4);
+
+SELECT * FROM employee_db.employee;
