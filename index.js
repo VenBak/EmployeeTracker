@@ -18,9 +18,9 @@ db.connect(
 
 // Variables that hold the sql code for each of the actions im gonna use them for
 var allRoles = `SELECT role.id as "Role ID", department.name as "Department", role.salary as "Salary", role.title as "Title"
-                FROM company_db.role JOIN company_db.department ON company_db.department.id = role.department_id`
+                FROM employee_db.role JOIN employee_db.department ON employee_db.department.id = role.department_id`
 
-var allDepartments = `SELECT id as "Department ID", name as "Department" FROM company_db.department`
+var allDepartments = `SELECT id as "Department ID", name as "Department" FROM employee_db.department`
 
 var allEmployees =  `SELECT employee.id as "Employee ID",
                       employee.first_name as "First Name",
@@ -28,10 +28,10 @@ var allEmployees =  `SELECT employee.id as "Employee ID",
                       role.title as Title,
                       department.name as Department,
                       role.salary as Salary,
-                      concat(manager.first_name, " ", manager.last_name) as "Manager Name" FROM company_db.employee employee
-                      LEFT JOIN company_db.employee manager ON employee.manager_id = manager.id
-                      LEFT JOIN company_db.role ON company_db.role.id = employee.role_id
-                      LEFT JOIN company_db.department ON company_db.department.id = role.department_id`
+                      concat(manager.first_name, " ", manager.last_name) as "Manager Name" FROM employee_db.employee employee
+                      LEFT JOIN employee_db.employee manager ON employee.manager_id = manager.id
+                      LEFT JOIN employee_db.role ON employee_db.role.id = employee.role_id
+                      LEFT JOIN employee_db.department ON employee_db.department.id = role.department_id`
 
 // The start function will load the main menu, asking the user what they want to be done
 function start() {
@@ -84,8 +84,8 @@ function addQuery (sql, parameters) {
 
 // The function that updates the employee role
 function updateEmployeeRole() {
-  let updateEmployeeRoleSql = `SELECT CONCAT(first_name, ' ', last_name) as manager_full_name FROM company_db.employee 
-                                JOIN company_db.role ON company_db.employee.role_id = company_db.role.id WHERE role.title = "Manager";`
+  let updateEmployeeRoleSql = `SELECT CONCAT(first_name, ' ', last_name) as manager_full_name FROM employee_db.employee 
+                                JOIN employee_db.role ON employee_db.employee.role_id = employee_db.role.id WHERE role.title = "Manager";`
   db.query(updateEmployeeRoleSql)
   // It then asks a series of questions to update the employee role
   inquirer.prompt([
@@ -145,11 +145,11 @@ function addRole() {
     },
 ]).then((data) => {
   // Adds another query where it selects from the departments
-    db.query(`SELECT * FROM company_db.department WHERE name = "${data.department_id}";`, (err, results) => {
+    db.query(`SELECT * FROM employee_db.department WHERE name = "${data.department_id}";`, (err, results) => {
         if (err) {
             console.error(err);
         } else {
-            var sql = `INSERT INTO company_db.role (role.title, role.salary, role.department_id) VALUES (?, ?, ?)`
+            var sql = `INSERT INTO employee_db.role (role.title, role.salary, role.department_id) VALUES (?, ?, ?)`
             var params = [data.title, data.salary, choice.id];
             addQuery(sql, params);
         }
@@ -167,7 +167,7 @@ function addDepartment() {
           name: "name"
       },
   ]).then((data) => {
-      const sql = `INSERT INTO company_db.department (name) VALUES (?)`;
+      const sql = `INSERT INTO employee_db.department (name) VALUES (?)`;
       const param = [data.name];
       addQuery(sql, param);
   });
