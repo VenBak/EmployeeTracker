@@ -22,4 +22,7 @@ If you wish to install the application make sure that you install all of the dep
 
 You must open the index.js file in your terminal or gitbash and run the repository using node. `node index.js` and then the magic should happen.
 
-![alt text](assets/images/screenshot.png)
+Here's a snippet of what that should look like:
+
+
+![alt text](./assets/Screenshot%202023-02-09%20at%2011.01.48%20PM.png)
