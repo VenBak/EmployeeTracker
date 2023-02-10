@@ -60,7 +60,7 @@ inquirer.prompt([
 }
 
 // function that adds queries and launches the main menu function start() again
-function addQuery (sql, parameters) {
+function addQuery (sql, param) {
   db.query((sql, param), (error, success) => {
     if (error) {
       console.error(error)
@@ -72,10 +72,10 @@ function addQuery (sql, parameters) {
   start()
 }
 
+
 // The function that updates the employee role
 function updateEmployeeRole() {
-  let updateEmployeeRoleSql = `SELECT CONCAT(first_name, ' ', last_name) as manager_full_name FROM employee_db.employee 
-                                JOIN employee_db.role ON employee_db.employee.role_id = employee_db.role.id WHERE role.title = "Manager";`
+    let updateEmployeeRoleSql = `SELECT CONCAT(first_name, ' ', last_name) as manager_full_name FROM employee_db.employee JOIN employee_db.role ON employee_db.employee.role_id = employee_db.role.id WHERE role.title = "Manager";`
   db.query(updateEmployeeRoleSql)
   // It then asks a series of questions to update the employee role
   inquirer.prompt([
@@ -95,7 +95,15 @@ function updateEmployeeRole() {
         choices: ['ex: CEO', 'CFO', 'Janitor'],
         name: "role"
     }
-])}
+]).then((answers) => {
+    // Only run the menu again when the last option has been answered to
+    if (answers.role) {
+        start()
+    }
+})
+}
+
+
 
 // Functions that will be used to see the selected table
 function viewTable (query) {
@@ -127,22 +135,17 @@ function addRole() {
         type: "input",
         message: "What's the salary of the role ?",
         name: "salary",
-    },
-    {
-        type: "list",
-        message: "Which department is the role under ?",
-        choices: ['HR', 'Finance', 'Marketing', 'Operations'],
-        name: "department_id",
-    },
+    }
 ]).then((data) => {
   // Adds another query where it selects from the departments
-    db.query(`SELECT * FROM employee_db.department WHERE name = "${data.department_id}";`, (err, results) => {
+  var answers = JSON.stringify(data.salary)
+    db.query(`SELECT * FROM employee_db.department WHERE name = "${data.department_id}";`, (err, table) => {
         if (err) {
             console.error(err);
         } else {
-            var sql = `INSERT INTO employee_db.role (role.title, role.salary, role.department_id) VALUES (?, ?, ?)`
-            var params = [data.title, data.salary, choice.id];
-            addQuery(sql, params);
+            var sql = `INSERT INTO employee_db.role (role.title, role.salary) VALUES (?, ?)`
+            var param = [data.title, answers];
+            addQuery(sql, param);
         }
     })
 })
