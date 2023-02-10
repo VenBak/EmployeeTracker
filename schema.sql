@@ -26,3 +26,22 @@ CREATE TABLE employee (
     FOREIGN KEY (role_id)
     REFERENCES role(id)
 );
+
+
+INSERT INTO department (id, name)
+VALUES (001, "Human Resources"),
+(002, "Marketing"),
+(003, "Finance"),
+(004, "Operations"),
+(005, "Board of Executives");
+
+INSERT INTO role (title, salary, department_id)
+VALUES ("Chief Executive Officer", 12980, 5),
+("Employee Manager", 10870, 1),
+("Finance Executive Manger", 11087, 3),
+("Manager", 9080, 3);
+
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Bob", "Lazar", 1, 1),
+("Lucy", "McCarthy", 2, 2),
+("London", "Bertrud", 3, 3);
